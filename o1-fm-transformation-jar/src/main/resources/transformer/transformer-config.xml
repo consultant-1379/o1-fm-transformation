@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<t:model-transformer-config xmlns:t="jelly:enm" id="O1" version="1.0.0">
+
+    <t:model-transformer-imports>
+        <t:import-transformer-config file="enums.xml"/>
+    </t:model-transformer-imports>
+    <t:register-tag-libraries>
+        <t:tag-library namespaceURI="jelly:custom"
+                       class="com.ericsson.oss.mediation.fm.snmp.model.transformer.custom.CustomTagLibrary"/>
+    </t:register-tag-libraries>
+
+    <t:model-transformers>
+
+        <t:define-model-transformer name="common-event-header">
+            <t:set-model-attribute oid="eventId" attributeName="vesEventId"/>
+            <t:set-model-attribute oid="eventName" attributeName="vesEventName"/>
+            <t:set-model-attribute oid="eventType" attributeName="vesEventType"/>
+            <t:set-model-attribute oid="startEpochMicrosec" attributeName="vesStartEpochMicrosec"/>
+            <t:set-model-attribute oid="lastEpochMicrosec" attributeName="vesLastEpochMicrosec"/>
+            <t:set-model-attribute oid="priority" attributeName="vesPriority"/>
+            <t:set-model-attribute oid="reportingEntityName" attributeName="vesReportingEntityName"/>
+            <t:set-model-attribute oid="sequence" attributeName="vesSequence"/>
+            <t:set-model-attribute oid="sourceName" attributeName="vesSourceName"/>
+            <t:set-model-attribute oid="version" attributeName="vesVersion"/>
+            <t:set-model-attribute oid="vesEventListenerVersion" attributeName="vesEventListenerVersion"/>
+        </t:define-model-transformer>
+
+        <t:define-model-transformer name="o1-fm-transformation">
+            <t:convert-set-model-property oid="href" mappedBy="managedObjectInstance"
+                                          converter="ManagedObjectInstanceConverter"/>
+            <t:set-model-attribute oid="notificationId" attributeName="notificationId"/>
+            <t:convert-set-model-property oid="eventTime" mappedBy="eventTime" converter="O1DateModelConverter"
+                                          args="format=yyyyMMddHHmmss.SSS"/>
+            <t:process-model-property oid="eventTime" processor="TimeZoneModelProcessor"/>
+            <t:set-model-attribute oid="systemDN" attributeName="systemDN"/>
+            <t:set-model-property oid="alarmId" mappedBy="eventAgentId"/>
+            <t:set-model-property oid="alarmType" mappedBy="eventType"/>
+            <t:convert-set-model-property oid="probableCause" mappedBy="probableCause"
+                                          converter="XmlDefinedEnumModelConverter" args="enum=EriProbableCause"/>
+            <t:set-model-property oid="perceivedSeverity" mappedBy="perceivedSeverity"/>
+            <t:set-model-property oid="specificProblem" mappedBy="specificProblem"/>
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator" args="value=ALARM"/>
+            <t:set-model-attribute oid="alarmId" attributeName="generatedAlarmId"/>
+            <t:process-model-property oid="href" processor="HrefProcessor"/>
+            <t:process-model-property oid="additionalInformation" processor="AdditionalInfoProcessor"/>
+        </t:define-model-transformer>
+
+        <t:model-transformer id="notifyNewAlarm" description="Notification for a new O1 alarm">
+            <t:include-model-transformer transformer="common-event-header"/>
+            <t:include-model-transformer transformer="o1-fm-transformation"/>
+        </t:model-transformer>
+
+        <t:model-transformer id="notifyChangedAlarm" description="Notification for a changed O1 alarm">
+            <t:include-model-transformer transformer="common-event-header"/>
+            <t:include-model-transformer transformer="o1-fm-transformation"/>
+        </t:model-transformer>
+
+        <t:model-transformer id="notifyClearedAlarm" description="Notification for a cleared O1 alarm">
+            <t:include-model-transformer transformer="common-event-header"/>
+            <t:include-model-transformer transformer="o1-fm-transformation"/>
+        </t:model-transformer>
+
+        <t:model-transformer id="notifyChangedAlarmGeneral" description="Notification for a changed O1 alarm general">
+            <t:include-model-transformer transformer="common-event-header"/>
+            <t:include-model-transformer transformer="o1-fm-transformation"/>
+        </t:model-transformer>
+
+        <t:model-transformer id="notifyAlarmListRebuilt" description="Notification for a rebuilt of O1 AlarmList">
+            <t:include-model-transformer transformer="common-event-header"/>
+            <t:convert-set-model-property oid="href" mappedBy="managedObjectInstance"
+                                          converter="ManagedObjectInstanceConverter"/>
+            <t:set-model-attribute oid="notificationId" attributeName="notificationId"/>
+            <t:convert-set-model-property oid="eventTime" mappedBy="eventTime" converter="O1DateModelConverter"
+                                          args="format=yyyyMMddHHmmss.SSS"/>
+            <t:process-model-property oid="eventTime" processor="TimeZoneModelProcessor"/>
+            <t:set-model-attribute oid="systemDN" attributeName="systemDN"/>
+            <t:set-model-property oid="alarmId" mappedBy="eventAgentId"/>
+            <t:set-model-property oid="alarmType" mappedBy="eventType"/>
+            <t:set-model-attribute oid="alarmId" attributeName="generatedAlarmId"/>
+            <t:process-model-property oid="href" processor="HrefProcessor"/>
+            <t:set-model-attribute oid="reason" attributeName="reason"/>
+            <t:process-model-property oid="additionalInformation" processor="AdditionalInfoProcessor"/>
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator"
+                                           args="value=CLEARALL"/>
+            <t:evaluate-set-model-property mappedBy="specificProblem" evaluator="SimpleModelEvaluator"
+                                           args="value=NE and OSS alarms are not in sync"/>
+            <t:evaluate-set-model-property mappedBy="probableCause" evaluator="SimpleModelEvaluator"
+                                           args="value=reinitialized"/>
+            <t:evaluate-set-model-property mappedBy="eventType" evaluator="SimpleModelEvaluator"
+                                           args="value=PROCESSING ERROR"/>
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator"
+                                           args="value=WARNING"/>
+        </t:model-transformer>
+
+        <t:model-transformer id="alarmRecords" description="Notification for a new O1 alarm">
+            <t:set-model-property oid="alarmType" mappedBy="eventType"/>
+            <t:set-model-property oid="perceivedSeverity" mappedBy="perceivedSeverity"/>
+            <t:set-model-property oid="alarmId" mappedBy="eventAgentId"/>
+            <t:set-model-property oid="objectInstance" mappedBy="managedObjectInstance"/>
+            <t:set-model-attribute oid="notificationId" attributeName="notificationId"/>
+            <t:convert-set-model-property oid="probableCause" mappedBy="probableCause"
+                                          converter="XmlDefinedEnumModelConverter" args="enum=EriProbableCause"/>
+            <t:convert-set-model-property oid="alarmChangedTime" mappedBy="eventTime" converter="O1DateModelConverter"
+                                          args="format=yyyyMMddHHmmss.SSS"/>
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator"
+                                           args="value=SYNCHRONIZATION_ALARM"/>
+            <t:set-model-property oid="specificProblem" mappedBy="specificProblem"/>
+            <t:set-model-attribute oid="alarmId" attributeName="generatedAlarmId"/>
+        </t:model-transformer>
+
+    </t:model-transformers>
+</t:model-transformer-config>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>com.ericsson.oss.mediation.fm</groupId>
+        <artifactId>o1-fm-transformation</artifactId>
+        <version>1.14.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>o1-engine-ear</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>ear</packaging>
+
+    <properties>
+        <project.ear.dependencies>com.ericsson.oss.itpf.sdk.service-framework:4.x services export,
+            com.ericsson.oss.mediation.engine-api export,
+            com.ericsson.oss.mediation.adapter.connector.api export,
+            meta-inf
+            optional,org.slf4j,com.ericsson.oss.itpf.datalayer.dps.api export
+        </project.ear.dependencies>
+        <sonar.skip>true</sonar.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.fm</groupId>
+            <artifactId>o1-engine-ejb</artifactId>
+            <version>${project.version}</version>
+            <type>ejb</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <generateApplicationXml>true</generateApplicationXml>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <filtering>true</filtering>
+                    <finalName>${project.artifactId}-${project.parent.version}</finalName>
+                    <modules>
+                        <ejbModule>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>o1-engine-ejb</artifactId>
+                        </ejbModule>
+                    </modules>
+                    <archive>
+                        <manifestEntries>
+                            <Dependencies>${project.ear.dependencies}</Dependencies>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

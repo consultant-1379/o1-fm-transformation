@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </Console>
+        <RollingFile name="FILE"
+                     fileName="target/test.log"
+                     filePattern="target/test-%i.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingFile>
+        <Syslog name="syslog"
+                facility="LOCAL4"
+                format="RFC5424"
+                host="0.0.0.0"
+                port="514"
+                protocol="UDP"
+                appName="MDC"
+                id="MDC"
+                mdcId="MDC">
+            <LoggerFields>
+                <KeyValuePair key="message" value="%-5p %c{1}:%L - %m%n"/>
+            </LoggerFields>
+        </Syslog>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.ericsson.oss.mediation.fm" additivity="false" level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FILE"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FILE"/>
+            <AppenderRef ref="syslog"/>
+        </Root>
+    </Loggers>
+</Configuration>

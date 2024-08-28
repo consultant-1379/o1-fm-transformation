@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<snmp-mediation-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:noNamespaceSchemaLocation="snmp-mediation-config.xsd">
+
+   <network-element type="O1" version="1.0.0">
+
+      <!-- configuration to retrieve alarm list from SNMP tables -->
+      <alarms-get-config>
+         <alarm-entry-config id="01">
+            <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveAlarmTable -->
+            <snmp-table oid=".1.3.6.1.4.1.193.183.6.1.3.5">
+               <!-- filters on fields (read only following fields ) -->
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveMajorType -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.2" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveMinorType -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.3" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveSpecificProblem -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.4" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveYangNodeInstance -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.5" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveEventType -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.6" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveEventTime -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.7" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveProbableCause -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.9" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveSeverity -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.10" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveAdditionalText -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.12" />
+               <!-- ERICSSON-ALARM-XPATH-MIB::eriAlarmXActiveAdditionalInfo -->
+               <snmp-field oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.15" />
+            </snmp-table>
+         </alarm-entry-config>
+      </alarms-get-config>
+
+      <!-- configuration for heartbeat if mode=push the snmp-object is the object
+  for set interval if mode=pull the snmp-object is the object for the ping
+  keep-alive -->
+      <heartbeat-push-config>
+         <heartbeat-interval-config time-unit="seconds">
+            <!-- heartbeat interval is pre-configured. To avoid errors, OID value
+             equal to "0" prevent heartbeat interval configuration -->
+            <snmp-object oid="0" />
+         </heartbeat-interval-config>
+      </heartbeat-push-config>
+
+      <event-notification-defaults>
+         <attribute name="sourceType">O1</attribute>
+      </event-notification-defaults>
+
+      <properties>
+         <!-- SNMP Connection Default Parameters -->
+         <property name="snmpRetries">1</property>    <!-- number of retries -->
+         <property name="snmpTimeout">2000</property> <!-- snmpTimeout in milliseconds -->
+         <property name="snmpTrapPort">162</property>
+         <property name="snmpWriteCommunity">public</property>
+
+         <!-- SNMP Object fot get last sequence number: eriAlarmXActiveLastSequenceNo -->
+         <property name="lastSequenceNumberObject">ERICSSON-ALARM-XPATH-MIB::.1.3.6.1.4.1.193.183.6.1.3.3.0</property>
+
+      </properties>
+   </network-element>
+</snmp-mediation-config>

@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>com.ericsson.oss.mediation.fm</groupId>
+        <artifactId>o1-fm-transformation</artifactId>
+        <version>1.14.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>o1-engine-api</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-core-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.services.fm.models</groupId>
+            <artifactId>fmmediationeventmodel-jar</artifactId>
+            <version>${version.fmmediationeventmodel.jar}</version>
+        </dependency>
+    </dependencies>
+
+</project>

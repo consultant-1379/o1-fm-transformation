@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-mediation-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="test-mediation-config.xsd">
+
+    <network-element type="O1" version="1.0.0">
+        <transformer-config>transformer-config.xml</transformer-config>
+    </network-element>
+
+</test-mediation-config>

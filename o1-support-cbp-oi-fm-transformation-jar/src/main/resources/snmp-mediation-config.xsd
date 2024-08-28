@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="snmp-mediation-config" type="snmpMediationConfig"/>
+
+  <xs:complexType name="snmpMediationConfig">
+    <xs:sequence>
+      <xs:element name="network-element" type="networkElementConfig" minOccurs="0"/>
+      <xs:element name="properties" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="property" type="propertyConfig" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="networkElementConfig">
+    <xs:sequence>
+      <xs:element name="transformer-config" type="xs:string" minOccurs="0"/>
+      <xs:element name="mibs" type="xs:string" minOccurs="0"/>
+      <xs:element name="alarms-get-config" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="alarm-entry-config" type="alarmEntryConfig" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:choice minOccurs="0">
+        <xs:element name="heartbeat-push-config" type="heartBeatPushConfig"/>
+        <xs:element name="heartbeat-pull-config" type="heartBeatPullConfig"/>
+      </xs:choice>
+      <xs:element name="properties" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="property" type="propertyConfig" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="version" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="alarmEntryConfig">
+    <xs:sequence>
+      <xs:element name="snmp-table" type="snmpTableConfig" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="snmp-last-seq-no" type="snmpObjectConfig" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="snmpTableConfig">
+    <xs:sequence>
+      <xs:element name="snmp-field" type="snmpObjectConfig" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="oid" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="snmpObjectConfig">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="oid" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="heartBeatPushConfig">
+    <xs:sequence>
+      <xs:element name="heartbeat-interval-config" type="heartBeatIntervalConfig" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="heartBeatIntervalConfig">
+    <xs:sequence>
+      <xs:element name="snmp-object" type="snmpObjectConfig" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="time-unit" type="heartBeatTimeUint"/>
+  </xs:complexType>
+
+  <xs:complexType name="heartBeatPullConfig">
+    <xs:sequence>
+      <xs:element name="hearbeat-ping-config" type="heartBeatPingConfig" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="heartBeatPingConfig">
+    <xs:sequence>
+      <xs:element name="snmp-object" type="snmpObjectConfig" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="propertyConfig">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="type" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:simpleType name="heartBeatTimeUint">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="nanoseconds"/>
+      <xs:enumeration value="microseconds"/>
+      <xs:enumeration value="seconds"/>
+      <xs:enumeration value="minutes"/>
+      <xs:enumeration value="hours"/>
+      <xs:enumeration value="days"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

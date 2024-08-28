@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.ericsson.oss.mediation.fm</groupId>
+        <artifactId>o1-fm-transformation</artifactId>
+        <version>1.14.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>o1-fm-mediation-flow-tests</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Not using properties for dependency versions as it makes reading and updating versions easier -->
+    </properties>
+
+    <dependencies>
+        <!-- Mediation Flow Test Framework Dependencies -->
+        <dependency>
+            <groupId>com.ericsson.cds</groupId>
+            <artifactId>flow-test-support</artifactId>
+            <version>1.1.384</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Mocking of static classes is only possible using mockito-inline with mockito-core. Updating these versions
+             will break mocking of static classes. Not possible to use PowerMock with the test framework. -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JEE spec used by the handler projects -->
+        <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-8.0</artifactId>
+            <version>1.0.3.Final</version>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-jakartaee-8.0</artifactId>
+            <version>1.0.1.Final</version>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Model Service -->
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.modeling</groupId>
+            <artifactId>model-service-api-jar</artifactId>
+            <version>12.14.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.modeling</groupId>
+            <artifactId>model-service-jar</artifactId>
+            <version>12.73.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.modeling</groupId>
+            <artifactId>model-service-event-handling</artifactId>
+            <version>12.73.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Handler dependencies used in tests, requires code and models plus any 'provided' dependencies of each -->
+
+        <!-- HANDLER: o1-fm-handler-code and its 'provided' dependencies -->
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.fm</groupId>
+            <artifactId>o1-fm-handler-code</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-recording-api</artifactId>
+            <version>4.1.17</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-modeled-eventbus-api</artifactId>
+            <version>4.1.17</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-eventbus-api</artifactId>
+            <version>4.1.17</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Handler uses mediation-sdk version 2.0.2, we can't use this version in the test as it causes MissingMethodException -->
+            <groupId>com.ericsson.nms.mediation</groupId>
+            <artifactId>core-mediation-api</artifactId>
+            <version>3.1.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.nms.mediation</groupId>
+            <artifactId>core-mediation-flow-api</artifactId>
+            <version>3.1.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.nms.mediation</groupId>
+            <artifactId>core-mediation-models-api</artifactId>
+            <version>3.1.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.common.flow</groupId>
+            <artifactId>eventflow-api</artifactId>
+            <version>2.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.adapter</groupId>
+            <artifactId>netconf-yang-xa-resource-provider-jar</artifactId>
+            <version>2.12.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.util.netconf</groupId>
+            <artifactId>cba-netconf-mediation-api</artifactId>
+            <version>2.9.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.adapter</groupId>
+            <artifactId>netconf-resource-adapter-api</artifactId>
+            <version>1.5.4</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- END HANDLER: o1-fm-handler-code -->
+
+        <!-- MODEL: All O1 flows and handlers -->
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.fm.models.configurations</groupId>
+            <artifactId>o1-fm-mediation-config-model-jar</artifactId>
+            <version>1.11.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- END MODEL: All O1 flows and handlers -->
+
+        <!-- HANDLER & MODEL: TlsCredentialsManagerHandler -->
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.handlers</groupId>
+            <artifactId>tls-credentials-manager-handler-code</artifactId>
+            <version>1.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.nms.mediation</groupId>
+            <artifactId>mediation-engine-api</artifactId>
+            <version>3.1.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>cryptography-service-api-jar</artifactId>
+            <groupId>com.ericsson.oss.itpf.security.cryptography</groupId>
+            <version>1.2.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.datalayer.dps</groupId>
+            <artifactId>dps-api</artifactId>
+            <version>1.100.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-core-api</artifactId>
+            <version>4.1.23</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation</groupId>
+            <artifactId>transport-api-jar</artifactId>
+            <version>1.24.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-config-api</artifactId>
+            <version>4.1.23</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-instrumentation-api</artifactId>
+            <version>4.1.23</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.67</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.handlers</groupId>
+            <artifactId>tls-credentials-manager-handler-model</artifactId>
+            <version>1.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- HANDLER & MODEL: SshCredentialsManagerHandler -->
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.handlers</groupId>
+            <artifactId>ssh-credentials-manager-handler-code</artifactId>
+            <version>1.24.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-cluster-api</artifactId>
+            <version>4.1.23</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-cluster-core</artifactId>
+            <version>4.61.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation</groupId>
+            <artifactId>ssh-transport-library-config-jar</artifactId>
+            <version>1.22.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.handlers</groupId>
+            <artifactId>ssh-credentials-manager-handler-model</artifactId>
+            <version>1.24.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- HANDLER & MODEL: NetconfSessionBuilderHandler -->
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.netconf.handlers</groupId>
+            <artifactId>netconf-session-builder-handler-ejb</artifactId>
+            <version>1.11.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.netconf</groupId>
+            <artifactId>netconf-session-api-jar</artifactId>
+            <version>1.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>1.1.EDR1.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.resource</groupId>
+            <artifactId>jboss-connector-api_1.7_spec</artifactId>
+            <version>1.0.1.Final-redhat-1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.netconf.models.handlers</groupId>
+            <artifactId>netconf-session-builder-handler-model-jar</artifactId>
+            <version>1.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- HANDLER & MODEL: NetconfSessionReleaserHandler -->
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.netconf.handlers</groupId>
+            <artifactId>netconf-session-releaser-handler-ejb</artifactId>
+            <version>1.2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.netconf.models.handlers</groupId>
+            <artifactId>netconf-session-releaser-handler-model-jar</artifactId>
+            <version>1.0.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- HANDLER & MODEL: snmp handlers -->
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.fm.handlers</groupId>
+            <artifactId>snmp-fm-handler-jar</artifactId>
+            <version>1.18.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.fm.handlers</groupId>
+            <artifactId>snmp-fm-handler-model-jar</artifactId>
+            <version>1.18.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>4.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>4.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.modeling</groupId>
+            <artifactId>modeling-common-jar</artifactId>
+            <version>11.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.modeling</groupId>
+            <artifactId>core-emodel-schemata-xsd-jar</artifactId>
+            <version>12.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.modeling</groupId>
+            <artifactId>model-repo-entities-jar</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- O1Node Model Jars -->
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.nrm.function</groupId>
+            <artifactId>o1node-node-model-common-target-type-jar</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.nrm.function</groupId>
+            <artifactId>o1node-node-model-common-jar</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.model.ci</groupId>
+            <artifactId>o1node-ci-model-jar</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ericsson.oss.mediation.nrm.function</groupId>
+            <artifactId>o1node-node-model-1-100-1.0-jar</artifactId>
+            <version>1.1.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <useManifestOnlyJar>false</useManifestOnlyJar>
+                    <useFile>false</useFile>
+                    <includes>
+                        <include>**/*Spec.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>none</phase>
+                        <goals>
+                            <goal>compare-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

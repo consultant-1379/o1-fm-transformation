@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<o1-mediation-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="o1-mediation-config.xsd">
+    <network-element type="O1" version="1.0.0"/>
+</o1-mediation-config>

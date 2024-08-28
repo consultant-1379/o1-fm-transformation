@@ -1,0 +1,27 @@
+version: "2.1"
+
+services:
+
+  ves-sdo-collector:
+    container_name: ves-sdo-collector
+    build: ../ves-sdo-collector
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+
+  mongo:
+    container_name: mongo
+    restart: always
+    build: ./mongo
+    ports:
+      - "27017:27017"
+
+  ves-generator:
+    container_name: ves-generator
+    restart: on-failure
+    build: ./ves-generator
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - ves-sdo-collector

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="test-mediation-config" type="testMediationConfig"/>
+    <xs:complexType name="testMediationConfig">
+        <xs:sequence>
+            <xs:element name="network-element" type="networkElementConfig" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="networkElementConfig">
+        <xs:sequence>
+            <xs:element name="transformer-config" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+    </xs:complexType>
+
+</xs:schema>

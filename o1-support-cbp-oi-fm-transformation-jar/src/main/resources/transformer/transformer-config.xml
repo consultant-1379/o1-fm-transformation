@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<t:model-transformer-config id="O1" version="1.0.0" xmlns:j="jelly:core" xmlns:t="jelly:enm"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <t:model-transformer-imports>
+        <t:import-transformer-config file="enums.xml" />
+    </t:model-transformer-imports>
+    <!--properties> <property name="propkey" type="java.lang.Long">prop value</property> </properties -->
+    <t:model-transformers>
+        <t:define-model-transformer name="o1-transformer">
+            <t:set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.4" mappedBy="specificProblem" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.2.1" attributeName="additionalText" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.2.4" attributeName="targetAdditionalInformation" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.3" attributeName="sequenceNumber" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.2" attributeName="majorType" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.3" attributeName="generatedAlarmId" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.6" mappedBy="eventType" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=IANAItuEventType" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.7" mappedBy="eventTime" converter="SnmpDateModelConverter"
+                                          args="format=yyyyMMddHHmmss.SSS" />
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.5"
+                                      processor="com.ericsson.oss.mediation.fm.o1.model.transformer.processor.impl.XpathObjectOfReferenceProcessor" />
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.7" processor="TimeZoneModelProcessor" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.9" mappedBy="probableCause" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=EriProbableCause" />
+
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator" args="value=ALARM" />
+            <t:if-match oid=".1.3.6.1.4.1.193.183.6.1.2.5" regex="1">
+                <t:evaluate-set-model-property mappedBy="recordType"
+                                               evaluator="SimpleModelEvaluator"
+                                               args="value=ALARM_INCOMPLETE" />
+            </t:if-match>
+
+            <t:if-match oid=".1.3.6.1.4.1.193.183.6.1.2.2" regex="1">
+                <t:evaluate-set-model-property mappedBy="recordType"
+                                               evaluator="SimpleModelEvaluator"
+                                               args="value=ALARM_INCOMPLETE" />
+            </t:if-match>
+        </t:define-model-transformer>
+
+        <t:define-model-transformer name="o1-alert-transformer">
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.5"
+                                      processor="com.ericsson.oss.mediation.fm.o1.model.transformer.processor.impl.XpathObjectOfReferenceProcessor" />
+            <t:set-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.4" mappedBy="specificProblem" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.2.4" attributeName="targetAdditionalInformation" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.2" attributeName="majorType" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.3" attributeName="generatedAlarmId" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.7" mappedBy="eventTime" converter="SnmpDateModelConverter"
+                                          args="format=yyyyMMddHHmmss.SSS" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.6" mappedBy="eventType" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=IANAItuEventType" />
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.7" processor="TimeZoneModelProcessor" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.8" mappedBy="probableCause" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=EriProbableCause" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.2.1" attributeName="additionalText" />
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator" args="value=ERROR_MESSAGE" />
+            <t:if-match oid=".1.3.6.1.4.1.193.183.6.1.2.5" regex="1">
+                <t:evaluate-set-model-property mappedBy="recordType"
+                                               evaluator="SimpleModelEvaluator"
+                                               args="value=ERROR_MESSAGE_INCOMPLETE" />
+            </t:if-match>
+            <t:if-match oid=".1.3.6.1.4.1.193.183.6.1.2.2" regex="1">
+                <t:evaluate-set-model-property mappedBy="recordType"
+                                               evaluator="SimpleModelEvaluator"
+                                               args="value=ERROR_MESSAGE_INCOMPLETE" />
+            </t:if-match>
+        </t:define-model-transformer>
+
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.8" description="EriAlarmXAppendInfo">
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.2.7" attributeName="targetAdditionalInformation" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.2.1" attributeName="additionalText" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.2" attributeName="majorType" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.3" attributeName="generatedAlarmId" />
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.5"
+                                      processor="com.ericsson.oss.mediation.fm.o1.model.transformer.processor.impl.XpathObjectOfReferenceProcessor" />
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator" args="value=ALARM_APPEND" />
+        </t:model-transformer>
+
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.15" description="EriAlarmXAppendAlertInfo">
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.2.7" attributeName="targetAdditionalInformation" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.2.1" attributeName="additionalText" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.2" attributeName="majorType"/>
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.3" attributeName="generatedAlarmId"/>
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.5"
+                                      processor="com.ericsson.oss.mediation.fm.o1.model.transformer.processor.impl.XpathObjectOfReferenceProcessor" />
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator" args="value=ERROR_MESSAGE_APPEND" />
+        </t:model-transformer>
+
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.1" description="EriAlarmXIndeterminateTrap">
+            <t:include-model-transformer transformer="o1-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=INDETERMINATE" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.2" description="EriAlarmXWarningTrap">
+            <t:include-model-transformer transformer="o1-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=WARNING" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.3" description="EriAlarmXMinorTrap">
+            <t:include-model-transformer transformer="o1-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=MINOR" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.4" description="EriAlarmXMajorTrap">
+            <t:include-model-transformer transformer="o1-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=MAJOR" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.5" description="EriAlarmXCriticalTrap">
+            <t:include-model-transformer transformer="o1-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=CRITICAL" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.7" description="EriAlarmXClearedTrap">
+            <t:include-model-transformer transformer="o1-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=CLEARED" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.10" description="EriAlarmXAlertIndeterminateTrap">
+            <t:include-model-transformer transformer="o1-alert-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=INDETERMINATE" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.11" description="EriAlarmXAlertWarningTrap">
+            <t:include-model-transformer transformer="o1-alert-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=WARNING" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.12" description="EriAlarmXAlertMinorTrap">
+            <t:include-model-transformer transformer="o1-alert-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=MINOR" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.13" description="EriAlarmXAlertMajorTrap">
+            <t:include-model-transformer transformer="o1-alert-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=MAJOR" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.14" description="EriAlarmXAlertCriticalTrap">
+            <t:include-model-transformer transformer="o1-alert-transformer" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" evaluator="SimpleModelEvaluator" args="value=CRITICAL" />
+        </t:model-transformer>
+
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.20" description="EriAlarmXHeartBeatNotif">
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.3" attributeName="sequenceNumber" />
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator" args="value=HEARTBEAT" />
+        </t:model-transformer>
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.2.0.30" description="EriAlarmXAlarmListRebuilt">
+            <t:evaluate-set-model-property mappedBy="recordType" args="value=CLEARALL" evaluator="SimpleModelEvaluator" />
+            <t:evaluate-set-model-property mappedBy="specificProblem" args="value=NE and OSS alarms are not in sync"
+                                           evaluator="SimpleModelEvaluator" />
+            <t:evaluate-set-model-property mappedBy="probableCause" args="value=reinitialized" evaluator="SimpleModelEvaluator" />
+            <t:evaluate-set-model-property mappedBy="eventType" args="value=PROCESSING ERROR" evaluator="SimpleModelEvaluator" />
+            <t:evaluate-set-model-property mappedBy="perceivedSeverity" args="value=WARNING" evaluator="SimpleModelEvaluator" />
+            <t:evaluate-set-model-attribute attributeName="behalf" evaluator="SimpleModelEvaluator" args="value=ManagementSystem=ENM" />
+        </t:model-transformer>
+
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.1.3.5" description="EriAlarmXActiveAlarmTable">
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.5"
+                                      processor="com.ericsson.oss.mediation.fm.o1.model.transformer.processor.impl.XpathObjectOfReferenceProcessor" />
+            <t:set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.4" mappedBy="specificProblem" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.12" attributeName="additionalText" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.2" attributeName="majorType" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.3" attributeName="generatedAlarmId" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.15" attributeName="targetAdditionalInformation" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.10" mappedBy="perceivedSeverity" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=ItuPerceivedSeverity" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.7" mappedBy="eventTime" converter="SnmpDateModelConverter"
+                                          args="format=yyyyMMddHHmmss.SSS" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.6" mappedBy="eventType" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=IANAItuEventType" />
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.7" processor="TimeZoneModelProcessor" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.3.5.1.9" mappedBy="probableCause" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=EriProbableCause" />
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator" args="value=SYNCHRONIZATION_ALARM" />
+        </t:model-transformer>
+
+        <t:model-transformer id=".1.3.6.1.4.1.193.183.6.1.4.5" description="EriAlarmXAlertTable">
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.5"
+                                      processor="com.ericsson.oss.mediation.fm.o1.model.transformer.processor.impl.XpathObjectOfReferenceProcessor" />
+            <t:set-model-property oid="..1.3.6.1.4.1.193.183.6.1.4.5.1.4" mappedBy="specificProblem" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.10" attributeName="additionalText" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.2" attributeName="majorType" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.3" attributeName="generatedAlarmId" />
+            <t:set-model-attribute oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.12" attributeName="targetAdditionalInformation" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.9" mappedBy="perceivedSeverity" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=ItuPerceivedSeverity" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.7" mappedBy="eventTime" converter="SnmpDateModelConverter"
+                                          args="format=yyyyMMddHHmmss.SSS" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.6" mappedBy="eventType" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=IANAItuEventType" />
+            <t:process-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.7" processor="TimeZoneModelProcessor" />
+            <t:convert-set-model-property oid=".1.3.6.1.4.1.193.183.6.1.4.5.1.8" mappedBy="probableCause" converter="XmlDefinedEnumModelConverter"
+                                          args="enum=EriProbableCause" />
+            <t:evaluate-set-model-property mappedBy="recordType" evaluator="SimpleModelEvaluator" args="value=SYNCHRONIZATION_ALARM" />
+
+        </t:model-transformer>
+    </t:model-transformers>
+</t:model-transformer-config>
